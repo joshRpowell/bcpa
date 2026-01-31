@@ -5,19 +5,7 @@ require 'spec_helper'
 RSpec.describe BCPA::Formatters::CSV do
   let(:formatter) { described_class.new }
 
-  let(:property_data) do
-    {
-      'folioNumber' => '504108BD0010',
-      'ownerName1' => 'SMITH, JOHN',
-      'ownerName2' => '',
-      'siteAddress1' => '9703 N NEW RIVER CANAL RD #100',
-      'siteAddress2' => '',
-      'siteCity' => 'PLANTATION',
-      'siteZip' => '33324',
-      'useCode' => '0400',
-      'assessedValue' => 250_000
-    }
-  end
+  let(:property_data) { build_property_data }
 
   let(:property) { BCPA::Property.new(property_data) }
   let(:properties) { [property] }

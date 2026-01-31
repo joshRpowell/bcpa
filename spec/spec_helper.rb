@@ -2,6 +2,7 @@
 
 require 'bcpa'
 require 'webmock/rspec'
+require_relative 'support/factories'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -19,6 +20,8 @@ RSpec.configure do |config|
   config.warnings = true
   config.order = :random
   Kernel.srand config.seed
+
+  config.include TestFactories
 end
 
 WebMock.disable_net_connect!(allow_localhost: true)
