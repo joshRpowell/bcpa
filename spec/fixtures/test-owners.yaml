@@ -1,0 +1,10 @@
+units:
+  - unit: 100
+    owner: "KELLY,ANDREA ISABEL"
+    type: villa
+  - unit: 101
+    owner: "STIGALE,JOANN"
+    type: villa
+  - unit: 200
+    owner: "NONEXISTENT,OWNER"
+    type: townhome

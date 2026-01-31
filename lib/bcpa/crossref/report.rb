@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "yaml"
-require "json"
+require 'yaml'
+require 'json'
 
 module BCPA
   module Crossref
@@ -51,40 +51,9 @@ module BCPA
 
       # Generate text report
       def to_s
-        lines = []
-        lines << "=== BCPA CROSS-REFERENCE REPORT ==="
-        lines << "Generated: #{Time.now.strftime("%Y-%m-%d")}"
-        lines << ""
-        lines << "SUMMARY:"
-        lines << "  Total units in file: #{units.length}"
-        lines << "  Found in BCPA: #{matches.length + discrepancies.length}"
-        lines << "  Owners MATCH: #{matches.length}"
-        lines << "  Owners DIFFER: #{discrepancies.length}"
-        lines << "  Not found in BCPA: #{not_found.length}"
-        lines << ""
-
-        if discrepancies.any?
-          lines << "=== OWNERSHIP DISCREPANCIES ==="
-          lines << "(Owner in file differs from county records)"
-          lines << ""
-
-          discrepancies.sort_by { |d| d[:unit] }.each do |d|
-            lines << "Unit #{d[:unit]} (#{d[:type]})"
-            lines << "  Folio:   #{d[:folio]}"
-            lines << "  Address: #{d[:address]}"
-            lines << "  File:    #{d[:coupon]}"
-            lines << "  BCPA:    #{d[:bcpa]}"
-            lines << ""
-          end
-        end
-
-        if not_found.any?
-          lines << "=== NOT FOUND IN BCPA ==="
-          not_found.sort_by { |u| u[:unit] }.each do |u|
-            lines << "Unit #{u[:unit]}: #{u[:owner]}"
-          end
-        end
-
+        lines = summary_lines
+        lines.concat(discrepancy_lines) if discrepancies.any?
+        lines.concat(not_found_lines) if not_found.any?
         lines.join("\n")
       end
 
@@ -106,13 +75,47 @@ module BCPA
 
       private
 
+      def summary_lines
+        [
+          '=== BCPA CROSS-REFERENCE REPORT ===',
+          "Generated: #{Time.now.strftime('%Y-%m-%d')}",
+          '',
+          'SUMMARY:',
+          "  Total units in file: #{units.length}",
+          "  Found in BCPA: #{matches.length + discrepancies.length}",
+          "  Owners MATCH: #{matches.length}",
+          "  Owners DIFFER: #{discrepancies.length}",
+          "  Not found in BCPA: #{not_found.length}",
+          ''
+        ]
+      end
+
+      def discrepancy_lines
+        lines = ['=== OWNERSHIP DISCREPANCIES ===', '(Owner in file differs from county records)', '']
+        discrepancies.sort_by { |d| d[:unit] }.each do |d|
+          lines << "Unit #{d[:unit]} (#{d[:type]})"
+          lines << "  Folio:   #{d[:folio]}"
+          lines << "  Address: #{d[:address]}"
+          lines << "  File:    #{d[:coupon]}"
+          lines << "  BCPA:    #{d[:bcpa]}"
+          lines << ''
+        end
+        lines
+      end
+
+      def not_found_lines
+        lines = ['=== NOT FOUND IN BCPA ===']
+        not_found.sort_by { |u| u[:unit] }.each { |u| lines << "Unit #{u[:unit]}: #{u[:owner]}" }
+        lines
+      end
+
       def load_units(yaml_path)
         data = YAML.load_file(yaml_path)
-        (data["units"] || []).map do |u|
+        (data['units'] || []).map do |u|
           {
-            unit: u["unit"],
-            owner: u["owner"],
-            type: u["type"]
+            unit: u['unit'],
+            owner: u['owner'],
+            type: u['type']
           }
         end
       end

@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require "thor"
+require 'thor'
 
 module BCPA
   # Command-line interface for BCPA
   class CLI < Thor
-    class_option :format, type: :string, default: "table",
-                          desc: "Output format (json, table, csv)"
+    class_option :format, type: :string, default: 'table',
+                          desc: 'Output format (json, table, csv)'
     class_option :output, type: :string,
-                          desc: "Write output to file"
+                          desc: 'Write output to file'
 
-    desc "search QUERY", "Search by address or owner name"
-    option :city, type: :string, default: "",
-                  desc: "City filter (e.g., PL for Plantation)"
+    desc 'search QUERY', 'Search by address or owner name'
+    option :city, type: :string, default: '',
+                  desc: 'City filter (e.g., PL for Plantation)'
     def search(query)
       client = Client.new
       properties = client.search(query, city: options[:city])
@@ -26,7 +26,7 @@ module BCPA
       output(properties)
     end
 
-    desc "folio FOLIO_NUMBER", "Lookup property by folio number"
+    desc 'folio FOLIO_NUMBER', 'Lookup property by folio number'
     def folio(folio_number)
       client = Client.new
       property = client.folio(folio_number)
@@ -39,20 +39,20 @@ module BCPA
       output([property])
     end
 
-    desc "crossref YAML_FILE", "Cross-reference owners against BCPA records"
+    desc 'crossref YAML_FILE', 'Cross-reference owners against BCPA records'
     option :searches, type: :array,
-                      default: ["9703 N NEW RIVER CANAL", "9701 N NEW RIVER CANAL",
-                                "MOCKINGBIRD LN", "COCO PLUM"],
-                      desc: "Address patterns to search"
-    option :city, type: :string, default: "PL",
-                  desc: "City filter for searches"
+                      default: ['9703 N NEW RIVER CANAL', '9701 N NEW RIVER CANAL',
+                                'MOCKINGBIRD LN', 'COCO PLUM'],
+                      desc: 'Address patterns to search'
+    option :city, type: :string, default: 'PL',
+                  desc: 'City filter for searches'
     def crossref(yaml_file)
       unless File.exist?(yaml_file)
         say "File not found: #{yaml_file}", :red
         exit 1
       end
 
-      say "Fetching BCPA records...", :cyan
+      say 'Fetching BCPA records...', :cyan
       client = Client.new
       all_properties = fetch_all_properties(client, options[:searches], options[:city])
       say "Found #{all_properties.length} properties\n\n", :green
@@ -60,7 +60,7 @@ module BCPA
       report = Crossref::Report.new
       report.run(yaml_file, all_properties)
 
-      if options[:format] == "json"
+      if options[:format] == 'json'
         write_output(report.to_json)
       else
         say report.to_s
@@ -68,7 +68,7 @@ module BCPA
       end
     end
 
-    desc "version", "Print version"
+    desc 'version', 'Print version'
     def version
       say "bcpa #{VERSION}"
     end

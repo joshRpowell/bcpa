@@ -10,3 +10,17 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*
     - "*.gemspec"
+
+Metrics/MethodLength:
+  Max: 25
+  Exclude:
+    - spec/**/*
+
+Metrics/AbcSize:
+  Max: 30
+  Exclude:
+    - lib/bcpa/crossref/report.rb
+
+Metrics/ClassLength:
+  Exclude:
+    - lib/bcpa/crossref/report.rb

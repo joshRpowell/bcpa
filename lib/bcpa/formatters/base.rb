@@ -10,9 +10,9 @@ module BCPA
 
       def self.for(format_name)
         case format_name.to_s.downcase
-        when "json" then JSON.new
-        when "table" then Table.new
-        when "csv" then CSV.new
+        when 'json' then JSON.new
+        when 'table' then Table.new
+        when 'csv' then CSV.new
         else
           raise ArgumentError, "Unknown format: #{format_name}"
         end

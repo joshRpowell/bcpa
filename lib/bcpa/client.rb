@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "json"
-require "uri"
+require 'net/http'
+require 'json'
+require 'uri'
 
 module BCPA
   # API client for Broward County Property Appraiser
   class Client
-    API_URL = "https://web.bcpa.net/BcpaClient/search.aspx/GetData"
+    API_URL = 'https://web.bcpa.net/BcpaClient/search.aspx/GetData'
 
     def initialize
       @uri = URI.parse(API_URL)
@@ -18,7 +18,7 @@ module BCPA
     # @param city [String] Optional city filter (e.g., "PL" for Plantation)
     # @param page_count [Integer] Number of results per page
     # @return [Array<Property>] Array of Property objects
-    def search(query, city: "", page_count: 200)
+    def search(query, city: '', page_count: 200)
       response = make_request(query, city, page_count)
       parse_response(response)
     end
@@ -38,14 +38,12 @@ module BCPA
       http.use_ssl = true
 
       request = Net::HTTP::Post.new(@uri.path)
-      request["Content-Type"] = "application/json; charset=utf-8"
+      request['Content-Type'] = 'application/json; charset=utf-8'
       request.body = build_request_body(query, city, page_count)
 
       response = http.request(request)
 
-      unless response.is_a?(Net::HTTPSuccess)
-        raise APIError, "API request failed: #{response.code} #{response.message}"
-      end
+      raise APIError, "API request failed: #{response.code} #{response.message}" unless response.is_a?(Net::HTTPSuccess)
 
       response.body
     end
@@ -54,18 +52,18 @@ module BCPA
       {
         value: query,
         cities: city,
-        orderBy: "",
-        pageNumber: "1",
+        orderBy: '',
+        pageNumber: '1',
         pageCount: page_count.to_s,
-        arrayOfValues: "",
-        selectedFromList: "false",
-        totalCount: "0"
+        arrayOfValues: '',
+        selectedFromList: 'false',
+        totalCount: '0'
       }.to_json
     end
 
     def parse_response(body)
       data = JSON.parse(body)
-      results = data.dig("d", "resultListk__BackingField") || []
+      results = data.dig('d', 'resultListk__BackingField') || []
       results.map { |r| Property.new(r) }
     rescue JSON::ParserError => e
       raise APIError, "Failed to parse API response: #{e.message}"

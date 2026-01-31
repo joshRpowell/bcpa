@@ -6,7 +6,7 @@ module BCPA
     class Matcher
       # Words to strip from names before comparison
       NOISE_WORDS = %w[LLC INC CORP TRSTEE TR REV JR SR II III IV ETAL LIV].freeze
-      NOISE_PATTERN = /(#{NOISE_WORDS.join("|")})/i.freeze
+      NOISE_PATTERN = /(#{NOISE_WORDS.join('|')})/i
 
       # Check if two owner names match by comparing significant words
       # @param name1 [String] First owner name (e.g., from coupon/YAML)
@@ -23,9 +23,9 @@ module BCPA
       # Normalize a name: uppercase, remove noise words, extract significant words
       def normalize(name)
         name.upcase
-            .gsub(/[^A-Z\s]/, "")        # Remove non-letters except spaces
-            .gsub(NOISE_PATTERN, "")      # Remove noise words
-            .gsub(/H\s*E/, "")            # Remove H/E (husband/estate)
+            .gsub(/[^A-Z\s]/, ' ')        # Replace non-letters with spaces
+            .gsub(NOISE_PATTERN, '')      # Remove noise words
+            .gsub(/H\s*E/, '')            # Remove H/E (husband/estate)
             .split(/\s+/)                 # Split on whitespace
             .reject { |w| w.length <= 2 } # Keep words > 2 chars
       end

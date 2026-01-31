@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "terminal-table"
+require 'terminal-table'
 
 module BCPA
   module Formatters
     # Table output formatter using terminal-table
     class Table < Base
-      COLUMNS = [:folio, :owner, :address, :unit_number].freeze
+      COLUMNS = %i[folio owner address unit_number].freeze
 
       def format(properties)
         rows = properties.map do |prop|
@@ -14,7 +14,7 @@ module BCPA
         end
 
         table = Terminal::Table.new(
-          headings: COLUMNS.map { |c| c.to_s.upcase.tr("_", " ") },
+          headings: COLUMNS.map { |c| c.to_s.upcase.tr('_', ' ') },
           rows: rows
         )
         table.to_s

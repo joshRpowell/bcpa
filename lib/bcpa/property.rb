@@ -7,27 +7,27 @@ module BCPA
                 :site_address2, :city, :zip, :use_code, :assessed_value
 
     def initialize(data)
-      @folio = data["folioNumber"]
-      @owner_name1 = data["ownerName1"]
-      @owner_name2 = data["ownerName2"]
-      @site_address1 = data["siteAddress1"]
-      @site_address2 = data["siteAddress2"]
-      @city = data["siteCity"]
-      @zip = data["siteZip"]
-      @use_code = data["useCode"]
-      @assessed_value = data["assessedValue"]
+      @folio = data['folioNumber']
+      @owner_name1 = data['ownerName1']
+      @owner_name2 = data['ownerName2']
+      @site_address1 = data['siteAddress1']
+      @site_address2 = data['siteAddress2']
+      @city = data['siteCity']
+      @zip = data['siteZip']
+      @use_code = data['useCode']
+      @assessed_value = data['assessedValue']
     end
 
     # Combined owner name
     def owner
-      [owner_name1, owner_name2].compact.reject(&:empty?).join(" ")
+      [owner_name1, owner_name2].compact.reject(&:empty?).join(' ')
     end
 
     # Full address
     def address
       parts = [site_address1, site_address2].compact.reject(&:empty?)
       parts << "#{city}, FL #{zip}" if city
-      parts.join(", ")
+      parts.join(', ')
     end
 
     # Extract unit number from address (e.g., #123)
