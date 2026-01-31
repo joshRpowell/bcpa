@@ -8,33 +8,59 @@ A Ruby CLI for querying the Broward County Property Appraiser (BCPA) API.
 gem install bcpa
 ```
 
-Or add to your Gemfile:
+Or clone and install locally:
 
-```ruby
-gem "bcpa"
+```bash
+git clone https://github.com/joshRpowell/bcpa
+cd bcpa
+bundle install
+bundle exec rake install
 ```
 
 ## Usage
 
-### Search by Address or Owner
+### Search Properties
+
+Search by address or owner name:
 
 ```bash
 bcpa search "9703 N NEW RIVER CANAL"
-bcpa search "SMITH" --city PL
+bcpa search "SMITH, JOHN"
+bcpa search "MOCKINGBIRD LN" --city PL
 ```
 
-### Lookup by Folio Number
+### Lookup by Folio
+
+Get property details by folio number:
 
 ```bash
 bcpa folio 504108BD0010
 ```
 
-### Cross-Reference Owners
+### Output Formats
 
-Compare a YAML file of unit owners against BCPA records:
+Export results as JSON, CSV, or table (default):
+
+```bash
+bcpa search "MOCKINGBIRD" --format json
+bcpa search "MOCKINGBIRD" --format csv
+bcpa search "MOCKINGBIRD" --format table
+```
+
+Save to file:
+
+```bash
+bcpa search "MOCKINGBIRD" --format csv --output results.csv
+bcpa folio 504108BD0010 --format json --output property.json
+```
+
+## Advanced: Cross-Reference (Optional)
+
+For HOA managers or property managers who maintain a list of unit owners, the `crossref` command compares your records against BCPA data to identify discrepancies.
 
 ```bash
 bcpa crossref unit-owners.yaml
+bcpa crossref unit-owners.yaml --format csv --output discrepancies.csv
 ```
 
 The YAML file should have this structure:
@@ -43,25 +69,16 @@ The YAML file should have this structure:
 units:
   - unit: 100
     owner: "SMITH, JOHN"
-    type: villa
   - unit: 101
     owner: "JONES, JANE"
-    type: townhome
 ```
 
-### Output Formats
-
-```bash
-bcpa search "MOCKINGBIRD" --format json
-bcpa search "MOCKINGBIRD" --format table
-bcpa search "MOCKINGBIRD" --format csv
-bcpa search "MOCKINGBIRD" --output results.json
-```
+The report shows matches, discrepancies (different owner names), and units not found in BCPA records.
 
 ## Development
 
 ```bash
-git clone https://github.com/joshuapowell/bcpa
+git clone https://github.com/joshRpowell/bcpa
 cd bcpa
 bundle install
 bundle exec rspec
