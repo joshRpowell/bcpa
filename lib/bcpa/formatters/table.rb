@@ -10,7 +10,8 @@ module BCPA
 
       def format(properties)
         rows = properties.map do |prop|
-          COLUMNS.map { |col| truncate(prop.to_h[col].to_s, 40) }
+          h = prop.to_h
+          COLUMNS.map { |col| truncate(h[col].to_s, 40) }
         end
 
         table = Terminal::Table.new(

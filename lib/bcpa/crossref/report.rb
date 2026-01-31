@@ -110,7 +110,7 @@ module BCPA
       end
 
       def load_units(yaml_path)
-        data = YAML.load_file(yaml_path)
+        data = YAML.safe_load_file(yaml_path, permitted_classes: [], permitted_symbols: [], aliases: false)
         (data['units'] || []).map do |u|
           {
             unit: u['unit'],

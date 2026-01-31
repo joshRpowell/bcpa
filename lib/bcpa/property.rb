@@ -20,20 +20,24 @@ module BCPA
 
     # Combined owner name
     def owner
-      [owner_name1, owner_name2].compact.reject(&:empty?).join(' ')
+      @owner ||= [owner_name1, owner_name2].compact.reject(&:empty?).join(' ')
     end
 
     # Full address
     def address
-      parts = [site_address1, site_address2].compact.reject(&:empty?)
-      parts << "#{city}, FL #{zip}" if city
-      parts.join(', ')
+      @address ||= begin
+        parts = [site_address1, site_address2].compact.reject(&:empty?)
+        parts << "#{city}, FL #{zip}" if city
+        parts.join(', ')
+      end
     end
 
     # Extract unit number from address (e.g., #123)
     def unit_number
-      match = site_address1&.match(/#(\d+)/)
-      match ? match[1].to_i : nil
+      @unit_number ||= begin
+        match = site_address1&.match(/#(\d+)/)
+        match ? match[1].to_i : nil
+      end
     end
 
     # Convert to hash for serialization

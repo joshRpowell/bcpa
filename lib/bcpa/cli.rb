@@ -75,6 +75,13 @@ module BCPA
 
     private
 
+    def validate_output_path(path)
+      expanded = File.expand_path(path)
+      raise ArgumentError, 'Cannot write to hidden files' if File.basename(expanded).start_with?('.')
+
+      expanded
+    end
+
     def output(properties)
       formatter = Formatters::Base.for(options[:format])
       result = formatter.format(properties)
@@ -83,16 +90,18 @@ module BCPA
 
     def write_output(content)
       if options[:output]
-        File.write(options[:output], content)
-        say "Output written to: #{options[:output]}", :green
+        safe_path = validate_output_path(options[:output])
+        File.write(safe_path, content)
+        say "Output written to: #{safe_path}", :green
       else
         puts content
       end
     end
 
     def write_json_output(report)
-      File.write(options[:output], report.to_json)
-      say "\nReport saved to: #{options[:output]}", :green
+      safe_path = validate_output_path(options[:output])
+      File.write(safe_path, report.to_json)
+      say "\nReport saved to: #{safe_path}", :green
     end
 
     def fetch_all_properties(client, searches, city)

@@ -12,7 +12,8 @@ module BCPA
         ::CSV.generate do |csv|
           csv << COLUMNS.map { |c| c.to_s.upcase.tr('_', ' ') }
           properties.each do |prop|
-            csv << COLUMNS.map { |col| prop.to_h[col] }
+            h = prop.to_h
+            csv << COLUMNS.map { |col| h[col] }
           end
         end
       end
