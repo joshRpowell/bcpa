@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cgi'
+
 module BCPA
   # Represents a property from BCPA records
   class Property
@@ -32,6 +34,11 @@ module BCPA
       end
     end
 
+    # Direct link to BCPA property page
+    def url
+      "https://web.bcpa.net/BcpaClient/Property.aspx?folio=#{CGI.escape(folio.to_s)}"
+    end
+
     # Extract unit number from address (e.g., #123)
     def unit_number
       @unit_number ||= begin
@@ -44,6 +51,7 @@ module BCPA
     def to_h
       {
         folio: folio,
+        url: url,
         owner: owner,
         owner_name1: owner_name1,
         owner_name2: owner_name2,

@@ -48,12 +48,19 @@ RSpec.describe BCPA::Property do
     end
   end
 
+  describe '#url' do
+    it 'returns the BCPA property page URL' do
+      expect(property.url).to eq('https://web.bcpa.net/BcpaClient/Property.aspx?folio=504108BD0010')
+    end
+  end
+
   describe '#to_h' do
     it 'returns hash representation' do
       hash = property.to_h
       expect(hash[:folio]).to eq('504108BD0010')
       expect(hash[:owner]).to eq('SMITH, JOHN SMITH, JANE')
       expect(hash[:unit_number]).to eq(100)
+      expect(hash[:url]).to eq(property.url)
     end
   end
 end
